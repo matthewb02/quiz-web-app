@@ -1,9 +1,11 @@
 
 import React from 'react';
 
-const OptionCard = ({option}) => {
+const OptionCard = ({option, onClick}) => {
     return (<div>
-        {option}
+        <button onClick={() => onClick(option)}>
+            {option}
+        </button>
     </div>)
 }
 

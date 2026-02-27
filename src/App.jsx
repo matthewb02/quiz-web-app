@@ -9,6 +9,7 @@ const App = (props) => {
 
     const [questions, setQuestions] = useState(null);
     const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [score, setScore] = useState(0);
 
     useEffect(() => {
         fetch(triviaAPI).then(response => {
@@ -21,9 +22,18 @@ const App = (props) => {
         });
     });
 
+    const nextQuestion = (isCorrect) => {
+        setCurrentQuestion(currentQuestion + 1)
+        if (isCorrect) {
+            setScore(score + 1);
+        }
+    }
+
     return (
         <div>
-            {questions ? <QuestionCard question={questions[currentQuestion]} /> : null}
+            Score: {score}
+            <br/>
+            {questions ? <QuestionCard question={questions[currentQuestion]} onAnswer={nextQuestion}/> : null}
         </div>
     );
 };
