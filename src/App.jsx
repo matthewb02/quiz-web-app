@@ -15,6 +15,7 @@ const App = (props) => {
     const [currentCategory, setCurrentCategory] = useState({"name": "Any"});
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [score, setScore] = useState(0);
+    const [totalAnswers, setTotalAnswers] = useState(0);
 
     let lastQuery = null;
 
@@ -53,12 +54,16 @@ const App = (props) => {
     });
 
     const nextQuestion = (isCorrect) => {
-        setCurrentQuestion(currentQuestion + 1)
-        if (currentQuestion >= questions.length) {
-            refreshQuestions();
-        }
         if (isCorrect) {
             setScore(score + 1);
+        }
+        setTotalAnswers(totalAnswers + 1);
+
+        if (currentQuestion >= questions.length - 1) {
+            setQuestions(null);
+            refreshQuestions();
+        } else {
+            setCurrentQuestion(currentQuestion + 1)
         }
     }
 
@@ -72,7 +77,7 @@ const App = (props) => {
         <div className="app">
             <CategorySelect categories={categories} onSelect={nextQuiz} />
             <div className="quiz-container">
-                <ScoreBox score={score} categoryName={currentCategory["name"]} />
+                <ScoreBox score={score} totalAnswers={totalAnswers} categoryName={currentCategory["name"]} />
                 {questions ? <QuestionCard question={questions[currentQuestion]} onAnswer={nextQuestion}/> : "Please wait a few seconds and refresh the page or try again."}
             </div>
         </div>
