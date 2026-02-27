@@ -1,7 +1,7 @@
 
 import React from "react";
 import DOMPurify from "dompurify";
-import OptionCard from "./OptionCard.jsx";
+import QuestionOption from "./QuestionOption.jsx";
 
 const QuestionCard = ({question, onAnswer}) => {
     const options = [...question["incorrect_answers"], question["correct_answer"]].sort(
@@ -16,7 +16,7 @@ const QuestionCard = ({question, onAnswer}) => {
         <div className="question-card">
             <h3 dangerouslySetInnerHTML={{__html: prompt}}></h3>
             {options.map((option, index) =>
-                <OptionCard key={index} option={option} onClick={onAnswerSelected} />
+                <QuestionOption key={index} option={option} onClick={onAnswerSelected} />
             )}
         </div>
     );
