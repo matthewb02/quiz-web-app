@@ -13,7 +13,7 @@ const QuestionCard = ({question, onAnswer}) => {
     }
 
     return (
-        <div>
+        <div className="question-card">
             <h3 dangerouslySetInnerHTML={{__html: prompt}}></h3>
             {options.map((option, index) =>
                 <OptionCard key={index} option={option} onClick={onAnswerSelected} />

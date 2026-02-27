@@ -1,7 +1,8 @@
 
+import "./layout.css"
 import React, {useEffect, useState} from 'react';
-import OptionCard from "./components/OptionCard.jsx";
 import QuestionCard from "./components/QuestionCard.jsx";
+import ScoreBox from "./components/ScoreBox.jsx";
 
 const triviaAPI = "https://opentdb.com/api.php?amount=10";
 
@@ -32,9 +33,8 @@ const App = (props) => {
     }
 
     return (
-        <div>
-            Score: {score}
-            <br/>
+        <div className="quiz-container">
+            <ScoreBox score={score}/>
             {questions ? <QuestionCard question={questions[currentQuestion]} onAnswer={nextQuestion}/> : null}
         </div>
     );
