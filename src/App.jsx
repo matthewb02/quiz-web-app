@@ -16,28 +16,32 @@ const App = (props) => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [score, setScore] = useState(0);
 
+    let lastQuery = null;
+
     const refreshQuestions = () => {
 
         const query = currentCategory["id"] ? triviaAPI + "&category=" + currentCategory["id"] : triviaAPI;
 
-        fetch(query).then(response => {
-            response.json().then((data) => {
-                console.log(data);
-                if (data["response_code"] === 0) {
-                    setQuestions(data["results"]);
-                    setCurrentQuestion(0);
-                } else {
-                    setQuestions(null);
-                }
+        if (lastQuery === null || Date.now() > lastQuery + 2500) {
+            lastQuery = Date.now();
+            fetch(query).then(response => {
+                response.json().then((data) => {
+                    console.log(data);
+                    if (data["response_code"] === 0) {
+                        setQuestions(data["results"]);
+                        setCurrentQuestion(0);
+                    } else {
+                        setQuestions(null);
+                    }
+                });
             });
-        });
-    }
-
-    if (questions === null || currentQuestion >= questions.length) {
-        refreshQuestions();
+        }
     }
 
     useEffect(() => {
+        if (questions === null) {
+            refreshQuestions();
+        }
         if (categories === null) {
             fetch(triviaAPICategories).then(response => {
                 response.json().then((data) => {
@@ -50,6 +54,9 @@ const App = (props) => {
 
     const nextQuestion = (isCorrect) => {
         setCurrentQuestion(currentQuestion + 1)
+        if (currentQuestion >= questions.length) {
+            refreshQuestions();
+        }
         if (isCorrect) {
             setScore(score + 1);
         }
@@ -66,7 +73,7 @@ const App = (props) => {
             <CategorySelect categories={categories} onSelect={nextQuiz} />
             <div className="quiz-container">
                 <ScoreBox score={score} categoryName={currentCategory["name"]} />
-                {questions ? <QuestionCard question={questions[currentQuestion]} onAnswer={nextQuestion}/> : "Please wait..."}
+                {questions ? <QuestionCard question={questions[currentQuestion]} onAnswer={nextQuestion}/> : "Please wait a few seconds and refresh the page or try again."}
             </div>
         </div>
     );
