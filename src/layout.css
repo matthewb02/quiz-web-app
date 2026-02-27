@@ -2,6 +2,7 @@
 .app {
     display: flex;
     flex-direction: row;
+    align-items: flex-start;
 }
 
 .category-select {
@@ -24,6 +25,7 @@
 
 .score-container {
     margin: 5px;
+    text-align: center;
 }
 
 .question-card {

@@ -12,20 +12,32 @@ const App = (props) => {
 
     const [questions, setQuestions] = useState(null);
     const [categories, setCategories] = useState(null);
+    const [currentCategory, setCurrentCategory] = useState({"name": "Any"});
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [score, setScore] = useState(0);
 
-    useEffect(() => {
-        if (questions === null) {
-            fetch(triviaAPI).then(response => {
-                response.json().then((data) => {
-                    console.log(data);
-                    if (data["response_code"] === 0) {
-                        setQuestions(data["results"]);
-                    }
-                });
+    const refreshQuestions = () => {
+
+        const query = currentCategory["id"] ? triviaAPI + "&category=" + currentCategory["id"] : triviaAPI;
+
+        fetch(query).then(response => {
+            response.json().then((data) => {
+                console.log(data);
+                if (data["response_code"] === 0) {
+                    setQuestions(data["results"]);
+                    setCurrentQuestion(0);
+                } else {
+                    setQuestions(null);
+                }
             });
-        }
+        });
+    }
+
+    if (questions === null || currentQuestion >= questions.length) {
+        refreshQuestions();
+    }
+
+    useEffect(() => {
         if (categories === null) {
             fetch(triviaAPICategories).then(response => {
                 response.json().then((data) => {
@@ -43,12 +55,18 @@ const App = (props) => {
         }
     }
 
+    const nextQuiz = (newCategory) => {
+        setCurrentCategory(newCategory);
+        refreshQuestions();
+        setScore(0);
+    }
+
     return (
         <div className="app">
-            <CategorySelect categories={categories} />
+            <CategorySelect categories={categories} onSelect={nextQuiz} />
             <div className="quiz-container">
-                <ScoreBox score={score}/>
-                {questions ? <QuestionCard question={questions[currentQuestion]} onAnswer={nextQuestion}/> : null}
+                <ScoreBox score={score} categoryName={currentCategory["name"]} />
+                {questions ? <QuestionCard question={questions[currentQuestion]} onAnswer={nextQuestion}/> : "Please wait..."}
             </div>
         </div>
     );

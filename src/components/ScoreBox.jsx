@@ -1,10 +1,10 @@
 
 import React from "react";
 
-const ScoreBox = ({score}) => {
+const ScoreBox = ({score, categoryName}) => {
 
     return (
-        <div className={"score-container"}>Score: {score}</div>
+        <div className={"score-container"}>Category: {categoryName}<br/>Score: {score}</div>
     );
 }
 
