@@ -12,14 +12,16 @@ const App = (props) => {
     const [score, setScore] = useState(0);
 
     useEffect(() => {
-        fetch(triviaAPI).then(response => {
-            response.json().then((data) => {
-                console.log(data);
-                if (data["response_code"] === 0) {
-                    setQuestions(data["results"]);
-                }
+        if (questions === null) {
+            fetch(triviaAPI).then(response => {
+                response.json().then((data) => {
+                    console.log(data);
+                    if (data["response_code"] === 0) {
+                        setQuestions(data["results"]);
+                    }
+                });
             });
-        });
+        }
     });
 
     const nextQuestion = (isCorrect) => {
