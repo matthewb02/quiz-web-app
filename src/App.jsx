@@ -1,16 +1,29 @@
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
+import OptionCard from "./components/OptionCard.jsx";
+import QuestionCard from "./components/QuestionCard.jsx";
 
 const triviaAPI = "https://opentdb.com/api.php?amount=10";
 
 const App = (props) => {
 
+    const [questions, setQuestions] = useState(null);
+    const [currentQuestion, setCurrentQuestion] = useState(0);
+
     useEffect(() => {
-        fetch(triviaAPI).then(response => console.log(response.json()));
+        fetch(triviaAPI).then(response => {
+            response.json().then((data) => {
+                console.log(data);
+                if (data["response_code"] === 0) {
+                    setQuestions(data["results"]);
+                }
+            });
+        });
     });
 
     return (
         <div>
+            {questions ? <QuestionCard question={questions[currentQuestion]} /> : null}
         </div>
     );
 };
