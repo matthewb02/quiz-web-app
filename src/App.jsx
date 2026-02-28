@@ -17,26 +17,19 @@ const App = (props) => {
     const [score, setScore] = useState(0);
     const [totalAnswers, setTotalAnswers] = useState(0);
 
-    let lastQuery = null;
-
     const refreshQuestions = () => {
 
         const query = currentCategory["id"] ? triviaAPI + "&category=" + currentCategory["id"] : triviaAPI;
 
-        if (lastQuery === null || Date.now() > lastQuery + 2500) {
-            lastQuery = Date.now();
-            fetch(query).then(response => {
-                response.json().then((data) => {
-                    console.log(data);
-                    if (data["response_code"] === 0) {
-                        setQuestions(data["results"]);
-                        setCurrentQuestion(0);
-                    } else {
-                        setQuestions(null);
-                    }
-                });
+        fetch(query).then(response => {
+            response.json().then((data) => {
+                if (data["response_code"] === 0) {
+                    setQuestions(data["results"]);
+                    setCurrentQuestion(0);
+                }
             });
-        }
+        });
+
     }
 
     useEffect(() => {
@@ -46,7 +39,6 @@ const App = (props) => {
         if (categories === null) {
             fetch(triviaAPICategories).then(response => {
                 response.json().then((data) => {
-                    console.log(data);
                     setCategories(data["trivia_categories"]);
                 });
             });
@@ -71,6 +63,7 @@ const App = (props) => {
         setCurrentCategory(newCategory);
         refreshQuestions();
         setScore(0);
+        setTotalAnswers(0);
     }
 
     return (
