@@ -78,6 +78,7 @@ const App = (props) => {
             <div className="quiz-container">
                 <ScoreBox score={score} totalAnswers={totalAnswers} categoryName={currentCategory["name"]} />
                 {questions ? <QuestionCard question={questions[currentQuestion]} onAnswer={nextQuestion}/> : "Please wait a few seconds and refresh the page or try again."}
+                {currentQuestion > 0 ? "Correct answer was: " + questions[currentQuestion - 1]["correct_answer"] : null}
             </div>
         </div>
     );
