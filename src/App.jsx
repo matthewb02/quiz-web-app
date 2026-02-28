@@ -17,6 +17,7 @@ const App = (props) => {
     const [score, setScore] = useState(0);
     const [totalAnswers, setTotalAnswers] = useState(0);
 
+    // refreshes the set of questions with an API call
     const refreshQuestions = () => {
 
         const query = currentCategory["id"] ? triviaAPI + "&category=" + currentCategory["id"] : triviaAPI;
@@ -32,6 +33,7 @@ const App = (props) => {
 
     }
 
+    // fill questions and categories with API data
     useEffect(() => {
         if (questions === null) {
             refreshQuestions();
@@ -45,12 +47,15 @@ const App = (props) => {
         }
     });
 
+    // switches to the next question and tallies the score
     const nextQuestion = (isCorrect) => {
+        // tally score
         if (isCorrect) {
             setScore(score + 1);
         }
         setTotalAnswers(totalAnswers + 1);
 
+        // refresh questions if we run out
         if (currentQuestion >= questions.length - 1) {
             setQuestions(null);
             refreshQuestions();
@@ -59,6 +64,7 @@ const App = (props) => {
         }
     }
 
+    // changes the category and refreshes the quiz
     const nextQuiz = (newCategory) => {
         setCurrentCategory(newCategory);
         refreshQuestions();
